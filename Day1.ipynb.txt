@@ -1,0 +1,279 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Day 1: Python for Backend Engineers\n",
+        "\n",
+        "Goal:\n",
+        "- Use Python as a backend utility language\n",
+        "- Parse APIs\n",
+        "- Transform data\n",
+        "- Analyze logs"
+      ],
+      "metadata": {
+        "id": "gaPYXJBEccPP"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def normalize_user(user):\n",
+        "    return {\n",
+        "        \"name\": user.get(\"name\", \"\").strip().title(),\n",
+        "        \"age\": user.get(\"age\", 0),\n",
+        "        \"active\": user.get(\"status\") == \"ACTIVE\"\n",
+        "    }\n",
+        "\n",
+        "user = {\"name\": \" aritra \", \"age\": 36, \"status\": \"ACTIVE\"}\n",
+        "print(normalize_user(user))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "BLHxkzXScjvc",
+        "outputId": "60832d80-2ca0-47b8-b215-975ac3617399"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "{'name': 'Aritra', 'age': 36, 'active': True}\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Simulated API Response Parsing"
+      ],
+      "metadata": {
+        "id": "tprqwT-rd_8U"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "api_response = {\n",
+        "    \"data\": [\n",
+        "        {\"id\": 1, \"latency_ms\": 120, \"status\": \"SUCCESS\"},\n",
+        "        {\"id\": 2, \"latency_ms\": 980, \"status\": \"FAIL\"},\n",
+        "        {\"id\": 3, \"latency_ms\": 450, \"status\": \"SUCCESS\"}\n",
+        "    ]\n",
+        "}\n",
+        "\n",
+        "slow_requests = [\n",
+        "    req for req in api_response[\"data\"]\n",
+        "    if req[\"latency_ms\"] > 500\n",
+        "]\n",
+        "\n",
+        "slow_requests"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8bLrvtkBdLOg",
+        "outputId": "c01f9be3-b2e0-41fb-a3b7-873c32b0aabf"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[{'id': 2, 'latency_ms': 980, 'status': 'FAIL'}]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 12
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Simple Metrics (Very Interview-Relevant)"
+      ],
+      "metadata": {
+        "id": "FbYlrvOUeJuN"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "latencies = [req[\"latency_ms\"] for req in api_response[\"data\"]]\n",
+        "\n",
+        "avg_latency = sum(latencies) / len(latencies)\n",
+        "max_latency = max(latencies)\n",
+        "\n",
+        "print(sum(latencies))\n",
+        "print(len(latencies))\n",
+        "\n",
+        "avg_latency, max_latency"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "30Bmmq_eePWj",
+        "outputId": "439f6199-122a-40bf-b2b0-1b5a641ab8ce"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "1550\n",
+            "3\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(516.6666666666666, 980)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 13
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Error Rate Calculation"
+      ],
+      "metadata": {
+        "id": "_UdentWEfFpO"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "total = len(api_response[\"data\"])\n",
+        "failures = len([r for r in api_response[\"data\"] if r[\"status\"] == \"FAIL\"])\n",
+        "\n",
+        "error_rate = failures / total\n",
+        "error_rate"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "oWrhvvdOfKO0",
+        "outputId": "924a515f-0729-4ed1-ef38-fc067b97c6f9"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0.3333333333333333"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 14
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Writing Clean, Reusable Functions"
+      ],
+      "metadata": {
+        "id": "uemquXbVfZVC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def calculate_error_rate(records):\n",
+        "    if not records:\n",
+        "        return 0\n",
+        "    failures = sum(1 for r in records if r[\"status\"] == \"FAIL\")\n",
+        "    return failures / len(records)\n",
+        "\n",
+        "calculate_error_rate(api_response[\"data\"])"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "O2iaYqX-fcRH",
+        "outputId": "43548427-92b3-4937-9ec0-d83a1d92123b"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0.3333333333333333"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 15
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Save Output for GitHub"
+      ],
+      "metadata": {
+        "id": "hMbrpDr9hNeC"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Save a small report\n",
+        "with open(\"day1_report.txt\", \"w\") as f:\n",
+        "    f.write(f\"Avg latency: {avg_latency}\\n\")\n",
+        "    f.write(f\"Max latency: {max_latency}\\n\")\n",
+        "    f.write(f\"Error rate: {error_rate}\\n\")"
+      ],
+      "metadata": {
+        "id": "J3ifW_MThRjp"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "What I learned:\n",
+        "- Python is excellent for backend utilities\n",
+        "- Perfect for data analysis & AI glue code\n",
+        "- Complements Java services well"
+      ],
+      "metadata": {
+        "id": "14mw2boOhZOd"
+      }
+    }
+  ]
+}
