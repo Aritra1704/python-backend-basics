@@ -1,0 +1,7 @@
+latency_ms,status,is_slow,is_error,endpoint_/order,endpoint_/payment
+120,SUCCESS,False,False,False,False
+980,FAIL,True,True,False,False
+450,SUCCESS,False,False,True,False
+780,SUCCESS,True,False,True,False
+1500,FAIL,True,True,False,True
+1300,FAIL,True,True,False,True
