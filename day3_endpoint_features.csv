@@ -1,0 +1,4 @@
+endpoint,avg_latency,p95_latency,error_rate,slow_rate,request_count,risk_score
+/login,550.0,937.0,0.5,0.5,2,0.5
+/order,615.0,763.5,0.0,0.5,2,0.2
+/payment,1400.0,1490.0,1.0,1.0,2,1.0
